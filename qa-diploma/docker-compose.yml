@@ -1,0 +1,62 @@
+services:
+  mysql:
+    image: mysql:8.0.41
+    container_name: mysql_diplom
+    ports:
+      - '3307:3306'
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+      MYSQL_DATABASE: app
+      MYSQL_USER: app
+      MYSQL_PASSWORD: pass
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "app", "-ppass"]
+      timeout: 5s
+      retries: 10
+      interval: 3s
+    restart: always
+    networks:
+      - diplom_network
+
+  postgres:
+    image: postgres:15.2
+    container_name: postgres_diplom
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: app
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: pass
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app"]
+      timeout: 5s
+      retries: 10
+      interval: 3s
+    restart: always
+    networks:
+      - diplom_network
+
+  gate-simulator:
+    build: ./gate-simulator
+    container_name: gate_simulator
+    ports:
+      - '9999:9999'
+    depends_on:
+      mysql:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    networks:
+      - diplom_network
+
+volumes:
+  mysql_data:
+  postgres_data:
+
+networks:
+  diplom_network:
+    driver: bridge
