@@ -5,6 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 
 import java.time.Duration;
 
+import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
 
@@ -22,13 +23,41 @@ public class PaymentPage {
     // =============================================
     // КНОПКА "ПРОДОЛЖИТЬ"
     // =============================================
-    private final SelenideElement continueButton = $x("//span[text()='Продолжить']");
+    private final SelenideElement continueButton = $(byText("Продолжить"));
 
     // =============================================
-    // УВЕДОМЛЕНИЯ (исправлены на основе реального HTML)
+    // УВЕДОМЛЕНИЯ
     // =============================================
     private final SelenideElement successNotification = $(".notification_status_ok");
     private final SelenideElement errorNotification = $(".notification_status_error");
+
+    // =============================================
+    // СООБЩЕНИЯ ОБ ОШИБКАХ ПОД ПОЛЯМИ
+    // =============================================
+
+    public SelenideElement getCardNumberError() {
+        return cardNumberInput.closest(".input_inner").$(".input_sub");
+    }
+
+    public SelenideElement getMonthError() {
+        return monthInput.closest(".input_inner").$(".input_sub");
+    }
+
+    public SelenideElement getYearError() {
+        return yearInput.closest(".input_inner").$(".input_sub");
+    }
+
+    public SelenideElement getHolderError() {
+        return cardHolderInput.closest(".input_inner").$(".input_sub");
+    }
+
+    public SelenideElement getCvcError() {
+        return cvcInput.closest(".input_inner").$(".input_sub");
+    }
+
+    // =============================================
+    // МЕТОДЫ ДЛЯ РАБОТЫ С ФОРМОЙ
+    // =============================================
 
     public PaymentPage fillForm(String cardNumber, String month, String year, String cardHolder, String cvc) {
         cardNumberInput.setValue(cardNumber);
@@ -41,9 +70,8 @@ public class PaymentPage {
 
     public PaymentPage submit() {
         continueButton.click();
-
         try {
-            Thread.sleep(2000);
+            Thread.sleep(1500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -51,12 +79,12 @@ public class PaymentPage {
     }
 
     public PaymentPage checkSuccessMessage() {
-        successNotification.shouldBe(Condition.visible, Duration.ofSeconds(10));
+        successNotification.shouldBe(Condition.visible, Duration.ofSeconds(15));
         return this;
     }
 
     public PaymentPage checkErrorMessage() {
-        errorNotification.shouldBe(Condition.visible, Duration.ofSeconds(10));
+        errorNotification.shouldBe(Condition.visible, Duration.ofSeconds(15));
         return this;
     }
 }

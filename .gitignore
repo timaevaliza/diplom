@@ -1,158 +1,48 @@
-# ============================================
-# GRADLE
-# ============================================
+# Gradle
 .gradle/
 build/
 !gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
 
-# ============================================
-# INTELIJ IDEA
-# ============================================
+# IntelliJ IDEA
 .idea/
 *.iml
 *.ipr
 *.iws
 out/
-!**/src/main/**/out/
-!**/src/test/**/out/
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
 
-# ============================================
-# VS CODE
-# ============================================
+# VS Code
 .vscode/
-*.code-workspace
 
-# ============================================
-# ECLIPSE
-# ============================================
-.apt_generated
+# Eclipse
 .classpath
-.factorypath
 .project
-.settings
-.springBeans
-.sts4-cache
+.settings/
 bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
 
-# ============================================
-# NETBEANS
-# ============================================
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-
-# ============================================
-# MAC OS
-# ============================================
+# Mac OS
 .DS_Store
-.AppleDouble
-.LSOverride
 
-# ============================================
-# WINDOWS
-# ============================================
+# Windows
 Thumbs.db
-ehthumbs.db
-Desktop.ini
 
-# ============================================
-# ЛОГИ И ОТЧЕТЫ
-# ============================================
+# Логи и отчеты
 *.log
 *.tmp
-*.temp
-*.pid
-*.seed
-*.pid.lock
 allure-results/
 allure-report/
 build/reports/
-build/test-results/
-*.html
-*.xml
 
-# ============================================
-# СИСТЕМНЫЕ ФАЙЛЫ
-# ============================================
+# Пароли и настройки
+gradle.properties
+
+# Драйверы
+chromedriver.exe
+geckodriver.exe
+
+# Временные файлы
 *.swp
 *.swo
 *~
-*.bak
-*.orig
-*.old
 
-# ============================================
-# ПАРОЛИ И КЛЮЧИ
-# ============================================
-*.pem
-*.key
-*.crt
-*.p12
-*.jks
-secrets.properties
-application-secrets.properties
-
-# ============================================
-# ВРЕМЕННЫЕ ФАЙЛЫ БАЗ ДАННЫХ
-# ============================================
-*.db
-*.sqlite
-*.sqlite3
-
-# ============================================
-# ЗАВИСИМОСТИ (НЕ ЗАГРУЖАЕМ)
-# ============================================
-node_modules/
-package-lock.json
-yarn.lock
-
-# ============================================
-# ДРАЙВЕРЫ БРАУЗЕРОВ
-# ============================================
-chromedriver.exe
-chromedriver
-geckodriver.exe
-geckodriver
-msedgedriver.exe
-msedgedriver
-
-# ============================================
-# DOCKER
-# ============================================
-docker-compose.override.yml
-*.dockerignore
-
-# ============================================
-# APPLICATION PROPERTIES (опционально)
-# ============================================
-# Если хотите скрыть application.properties с паролями
-# application.properties
-# application-*.properties
-
-# ============================================
-# АРХИВЫ И БИНАРНИКИ
-# ============================================
-*.jar
-*.war
-*.ear
-*.zip
-*.tar.gz
-*.rar
-
-# ============================================
-# КЭШИ
-# ============================================
-.cache/
-.parcel-cache/
-.npm/
-.yarn/
+# Папка с SUT
+qa-diploma/

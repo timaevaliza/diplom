@@ -10,24 +10,45 @@ repositories {
 }
 
 dependencies {
+    // JUnit 5
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+
+    // Selenide
+    testImplementation 'com.codeborne:selenide:6.19.1'
+
+    // WebDriverManager
+    testImplementation 'io.github.bonigarcia:webdrivermanager:5.9.2'
+
+    // MySQL Driver
+    testImplementation 'mysql:mysql-connector-java:8.0.33'
+
+    // PostgreSQL Driver
+    testImplementation 'org.postgresql:postgresql:42.5.4'
+
+    // REST Assured
+    testImplementation 'io.rest-assured:rest-assured:5.3.0'
+
+    // Commons DBUtils
+    testImplementation 'commons-dbutils:commons-dbutils:1.8.1'
+
+    // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.28'
     annotationProcessor 'org.projectlombok:lombok:1.18.28'
     testCompileOnly 'org.projectlombok:lombok:1.18.28'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
+}
 
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
-
-    testImplementation 'com.codeborne:selenide:6.19.1'
-
-    testImplementation 'io.github.bonigarcia:webdrivermanager:5.9.2'
-
-    testImplementation 'mysql:mysql-connector-java:8.0.33'
-
-    testImplementation 'org.postgresql:postgresql:42.5.4'
-
-    testImplementation 'io.rest-assured:rest-assured:5.3.0'
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
 }
 
 test {
     useJUnitPlatform()
+    systemProperty 'file.encoding', 'UTF-8'
+    systemProperty 'selenide.headless', System.getProperty('selenide.headless', 'false')
+    systemProperty 'chromeoptions.prefs', System.getProperty('chromeoptions.prefs', "profile.password_manager_leak_detection=false")
+
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }

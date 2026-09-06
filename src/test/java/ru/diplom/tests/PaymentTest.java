@@ -40,6 +40,14 @@ public class PaymentTest {
                 DataGenerator.getValidCvc()
         );
         paymentPage.submit();
+
+        // Добавляем ожидание
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         paymentPage.checkSuccessMessage();
 
         String status = DbHelper.getPaymentStatus("mysql");

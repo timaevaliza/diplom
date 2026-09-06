@@ -1,81 +1,74 @@
 package ru.diplom.db;
 
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.ScalarHandler;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class DbHelper {
 
-    private static final String MYSQL_URL = "jdbc:mysql://localhost:3307/app";
-    private static final String MYSQL_USER = "app";
-    private static final String MYSQL_PASSWORD = "pass";
-    
-    private static final String POSTGRES_URL = "jdbc:postgresql://localhost:5432/app";
-    private static final String POSTGRES_USER = "app";
-    private static final String POSTGRES_PASSWORD = "pass";
+    // ============================================
+    // ЧИТАЕМ ПАРАМЕТРЫ ИЗ СИСТЕМНЫХ СВОЙСТВ
+    // ============================================
 
+    private static final String DB_URL = System.getProperty("db.url", "jdbc:mysql://localhost:3307/app");
+    private static final String DB_USER = System.getProperty("db.user", "app");
+    private static final String DB_PASSWORD = System.getProperty("db.password", "pass");
+
+    private static final String POSTGRES_URL = System.getProperty("db.postgres.url", "jdbc:postgresql://localhost:5432/app");
+    private static final String POSTGRES_USER = System.getProperty("db.postgres.user", "app");
+    private static final String POSTGRES_PASSWORD = System.getProperty("db.postgres.password", "pass");
+
+    private static final QueryRunner runner = new QueryRunner();
 
     private DbHelper() {}
 
+    // ============================================
+    // МЕТОДЫ ПОДКЛЮЧЕНИЯ
+    // ============================================
 
     public static Connection getMySqlConnection() throws SQLException {
-        return DriverManager.getConnection(MYSQL_URL, MYSQL_USER, MYSQL_PASSWORD);
+        return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
     }
-
 
     public static Connection getPostgresConnection() throws SQLException {
         return DriverManager.getConnection(POSTGRES_URL, POSTGRES_USER, POSTGRES_PASSWORD);
     }
 
+    // ============================================
+    // МЕТОДЫ ДЛЯ РАБОТЫ С БД
+    // ============================================
 
     public static void cleanDatabase(String dbType) throws SQLException {
-        Connection connection;
-        if (dbType.equalsIgnoreCase("mysql")) {
-            connection = getMySqlConnection();
-        } else {
-            connection = getPostgresConnection();
-        }
+        Connection connection = dbType.equalsIgnoreCase("mysql")
+                ? getMySqlConnection()
+                : getPostgresConnection();
 
-        Statement statement = connection.createStatement();
         try {
-            statement.executeUpdate("DELETE FROM credit_request_entity");
-        } catch (Exception ignored) {}
+            runner.update(connection, "DELETE FROM credit_request_entity");
+        } catch (SQLException ignored) {}
         try {
-            statement.executeUpdate("DELETE FROM payment_entity");
-        } catch (Exception ignored) {}
+            runner.update(connection, "DELETE FROM payment_entity");
+        } catch (SQLException ignored) {}
         try {
-            statement.executeUpdate("DELETE FROM order_entity");
-        } catch (Exception ignored) {}
+            runner.update(connection, "DELETE FROM order_entity");
+        } catch (SQLException ignored) {}
 
-        statement.close();
         connection.close();
         System.out.println("База данных " + dbType + " очищена.");
     }
 
     public static String getPaymentStatus(String dbType) throws SQLException {
-        Connection connection;
-        if (dbType.equalsIgnoreCase("mysql")) {
-            connection = getMySqlConnection();
-        } else {
-            connection = getPostgresConnection();
-        }
+        Connection connection = dbType.equalsIgnoreCase("mysql")
+                ? getMySqlConnection()
+                : getPostgresConnection();
 
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(
-                "SELECT status FROM payment_entity ORDER BY created DESC LIMIT 1"
-        );
+        String sql = "SELECT status FROM payment_entity ORDER BY created DESC LIMIT 1";
+        String status = runner.query(connection, sql, new ScalarHandler<>());
 
-        String status = null;
-        if (resultSet.next()) {
-            status = resultSet.getString("status");
-        }
-
-        resultSet.close();
-        statement.close();
         connection.close();
-
         return status;
     }
 }
