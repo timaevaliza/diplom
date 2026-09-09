@@ -2,6 +2,9 @@ package ru.diplom.tests;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.diplom.pages.MainPage;
@@ -12,6 +15,8 @@ import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.open;
 
+@Epic("Путешествие дня")
+@Feature("Оплата по дебетовой карте")
 public class PaymentNegativeTest {
 
     @BeforeEach
@@ -27,6 +32,7 @@ public class PaymentNegativeTest {
     // ============================================
 
     @Test
+    @Story("Негативный сценарий: пустой номер карты")
     void shouldShowErrorWhenCardNumberIsEmpty() {
         MainPage mainPage = new MainPage();
         mainPage.open();
@@ -46,6 +52,7 @@ public class PaymentNegativeTest {
     }
 
     @Test
+    @Story("Негативный сценарий: номер карты из 15 цифр")
     void shouldShowErrorWhenCardNumberHas15Digits() {
         MainPage mainPage = new MainPage();
         mainPage.open();
@@ -69,6 +76,7 @@ public class PaymentNegativeTest {
     // ============================================
 
     @Test
+    @Story("Негативный сценарий: пустой месяц")
     void shouldShowErrorWhenMonthIsEmpty() {
         MainPage mainPage = new MainPage();
         mainPage.open();
@@ -84,10 +92,11 @@ public class PaymentNegativeTest {
         paymentPage.submit();
 
         paymentPage.getMonthError().shouldBe(Condition.visible, Duration.ofSeconds(10));
-        paymentPage.getMonthError().shouldHave(Condition.text("Поле обязательно для заполнения"));
+        paymentPage.getMonthError().shouldHave(Condition.text("Неверный формат"));
     }
 
     @Test
+    @Story("Негативный сценарий: месяц 13")
     void shouldShowErrorWhenMonthIs13() {
         MainPage mainPage = new MainPage();
         mainPage.open();
@@ -111,6 +120,7 @@ public class PaymentNegativeTest {
     // ============================================
 
     @Test
+    @Story("Негативный сценарий: пустой год")
     void shouldShowErrorWhenYearIsEmpty() {
         MainPage mainPage = new MainPage();
         mainPage.open();
@@ -126,10 +136,11 @@ public class PaymentNegativeTest {
         paymentPage.submit();
 
         paymentPage.getYearError().shouldBe(Condition.visible, Duration.ofSeconds(10));
-        paymentPage.getYearError().shouldHave(Condition.text("Поле обязательно для заполнения"));
+        paymentPage.getYearError().shouldHave(Condition.text("Неверный формат"));
     }
 
     @Test
+    @Story("Негативный сценарий: год 00")
     void shouldShowErrorWhenYearIs00() {
         MainPage mainPage = new MainPage();
         mainPage.open();
@@ -149,6 +160,7 @@ public class PaymentNegativeTest {
     }
 
     @Test
+    @Story("Негативный сценарий: истекший год")
     void shouldShowErrorWhenYearIsExpired() {
         MainPage mainPage = new MainPage();
         mainPage.open();
@@ -172,6 +184,7 @@ public class PaymentNegativeTest {
     // ============================================
 
     @Test
+    @Story("Негативный сценарий: пустой владелец")
     void shouldShowErrorWhenHolderIsEmpty() {
         MainPage mainPage = new MainPage();
         mainPage.open();
@@ -191,6 +204,7 @@ public class PaymentNegativeTest {
     }
 
     @Test
+    @Story("Негативный сценарий: владелец с цифрами (баг)")
     void shouldShowErrorWhenHolderContainsDigits() {
         MainPage mainPage = new MainPage();
         mainPage.open();
@@ -205,7 +219,7 @@ public class PaymentNegativeTest {
         );
         paymentPage.submit();
 
-        // ❌ БАГ: Ошибка не появляется, платеж проходит успешно
+        // БАГ: Ошибка не появляется, платеж проходит успешно
         paymentPage.checkSuccessMessage();
     }
 
@@ -214,6 +228,7 @@ public class PaymentNegativeTest {
     // ============================================
 
     @Test
+    @Story("Негативный сценарий: пустой CVC")
     void shouldShowErrorWhenCvcIsEmpty() {
         MainPage mainPage = new MainPage();
         mainPage.open();
@@ -229,13 +244,11 @@ public class PaymentNegativeTest {
         paymentPage.submit();
 
         paymentPage.getCvcError().shouldBe(Condition.visible, Duration.ofSeconds(10));
-        paymentPage.getCvcError().shouldHave(Condition.or("ошибка",
-                Condition.text("Поле обязательно для заполнения"),
-                Condition.text("Неверный формат")
-        ));
+        paymentPage.getCvcError().shouldHave(Condition.text("Неверный формат"));
     }
 
     @Test
+    @Story("Негативный сценарий: CVC из 2 цифр")
     void shouldShowErrorWhenCvcHas2Digits() {
         MainPage mainPage = new MainPage();
         mainPage.open();

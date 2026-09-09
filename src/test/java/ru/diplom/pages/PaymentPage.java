@@ -1,12 +1,14 @@
 package ru.diplom.pages;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 
 import java.time.Duration;
 
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.$x;
 
 public class PaymentPage {
@@ -33,26 +35,52 @@ public class PaymentPage {
 
     // =============================================
     // СООБЩЕНИЯ ОБ ОШИБКАХ ПОД ПОЛЯМИ
+    // Поиск через фильтрацию по названию поля
+    // Селекторы с ДВУМЯ подчеркиваниями: .input__top и .input__sub
     // =============================================
 
+    private ElementsCollection allLabels() {
+        return $$(".input__top");
+    }
+
     public SelenideElement getCardNumberError() {
-        return cardNumberInput.closest(".input_inner").$(".input_sub");
+        return allLabels()
+                .filterBy(Condition.text("Номер карты"))
+                .first()
+                .closest(".input")
+                .$(".input__sub");
     }
 
     public SelenideElement getMonthError() {
-        return monthInput.closest(".input_inner").$(".input_sub");
+        return allLabels()
+                .filterBy(Condition.text("Месяц"))
+                .first()
+                .closest(".input")
+                .$(".input__sub");
     }
 
     public SelenideElement getYearError() {
-        return yearInput.closest(".input_inner").$(".input_sub");
+        return allLabels()
+                .filterBy(Condition.text("Год"))
+                .first()
+                .closest(".input")
+                .$(".input__sub");
     }
 
     public SelenideElement getHolderError() {
-        return cardHolderInput.closest(".input_inner").$(".input_sub");
+        return allLabels()
+                .filterBy(Condition.text("Владелец"))
+                .first()
+                .closest(".input")
+                .$(".input__sub");
     }
 
     public SelenideElement getCvcError() {
-        return cvcInput.closest(".input_inner").$(".input_sub");
+        return allLabels()
+                .filterBy(Condition.text("CVC/CVV"))
+                .first()
+                .closest(".input")
+                .$(".input__sub");
     }
 
     // =============================================
